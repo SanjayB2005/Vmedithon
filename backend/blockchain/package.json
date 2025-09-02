@@ -1,0 +1,35 @@
+{
+  "name": "vmedithon-blockchain",
+  "version": "1.0.0",
+  "description": "Smart contracts for Vmedithon medical records management",
+  "main": "truffle-config.js",
+  "scripts": {
+    "compile": "truffle compile",
+    "test": "truffle test",
+    "migrate": "truffle migrate",
+    "deploy": "node scripts/deploy.js",
+    "deploy:local": "truffle migrate --network development",
+    "deploy:testnet": "truffle migrate --network sepolia",
+    "deploy:simple": "node deploy-simple.js",
+    "ganache": "ganache-cli -a 10 -e 100 -p 7545 --deterministic",
+    "blockchain:start": "node start-blockchain.js",
+    "start": "node start-blockchain.js",
+    "reset": "truffle migrate --reset"
+  },
+  "keywords": [
+    "ethereum",
+    "blockchain",
+    "medical-records",
+    "smart-contracts",
+    "solidity"
+  ],
+  "author": "Vmedithon Team",
+  "license": "MIT",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.15",
+    "dotenv": "^16.0.0",
+    "ganache-cli": "^6.12.2",
+    "truffle": "^5.11.5",
+    "web3": "^1.10.0"
+  }
+}
