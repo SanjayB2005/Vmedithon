@@ -13,7 +13,7 @@ async function freshTest() {
     const web3 = new Web3('http://localhost:7545');
     const accounts = await web3.eth.getAccounts();
     
-    const contract = new web3.eth.Contract(
+    const contract = new web3.eth.Contract( 
         contractABI,
         contractDeployment.contractAddress
     );

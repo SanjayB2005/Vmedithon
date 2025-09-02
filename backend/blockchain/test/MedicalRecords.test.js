@@ -18,7 +18,7 @@ contract("MedicalRecords", accounts => {
     });
     
     describe("Contract Deployment", () => {
-        it("should deploy successfully", async () => {
+        it("should deploy successfully", async ()  => {
             const address = await medicalRecords.address;
             assert.notEqual(address, "");
             assert.notEqual(address, 0x0);
