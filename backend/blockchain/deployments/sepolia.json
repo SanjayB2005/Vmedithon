@@ -1,11 +1,11 @@
 {
   "network": "sepolia",
   "networkName": "Sepolia Ethereum",
-  "contractAddress": "0x15d6eefe60f9490DB1c767478b1254881d49C727",
-  "deployedAt": "2025-09-02T23:45:04.242Z",
+  "contractAddress": "0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8",
+  "deployedAt": "2025-09-03T00:34:37.915Z",
   "deployer": "0x309780978FEc7A070ff69DA35dD2d3C21D3b922b",
-  "explorerUrl": "https://sepolia.etherscan.io/address/0x15d6eefe60f9490DB1c767478b1254881d49C727",
-  "cost": "0.001103 ETH",
+  "explorerUrl": "https://sepolia.etherscan.io/address/0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8",
+  "cost": "0.000448 ETH",
   "gasUsed": 4120937,
-  "gasPrice": "0.310269762 Gwei"
+  "gasPrice": "0.126122036 Gwei"
 }

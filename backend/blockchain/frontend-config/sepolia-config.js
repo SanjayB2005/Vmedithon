@@ -1,9 +1,9 @@
 // Vmedithon Blockchain Configuration - SEPOLIA
-// Generated automatically on 2025-09-02T23:45:04.336Z
+// Generated automatically on 2025-09-03T00:34:37.974Z
 
 export const blockchainConfig = {
   "contract": {
-    "address": "0x15d6eefe60f9490DB1c767478b1254881d49C727",
+    "address": "0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8",
     "abi": [
       {
         "inputs": [],
@@ -1205,10 +1205,10 @@ export const blockchainConfig = {
   },
   "deployment": {
     "network": "sepolia",
-    "contractAddress": "0x15d6eefe60f9490DB1c767478b1254881d49C727",
+    "contractAddress": "0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8",
     "deployer": "0x309780978FEc7A070ff69DA35dD2d3C21D3b922b",
-    "deployedAt": "2025-09-02T23:45:04.332Z",
-    "blockExplorer": "https://sepolia.etherscan.io/address/0x15d6eefe60f9490DB1c767478b1254881d49C727"
+    "deployedAt": "2025-09-03T00:34:37.973Z",
+    "blockExplorer": "https://sepolia.etherscan.io/address/0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8"
   },
   "usage": {
     "web3Connection": "const web3 = new Web3('https://sepolia.infura.io/v3/e2b75194499c43e3ad3964c11e10f437');",
@@ -1218,7 +1218,7 @@ export const blockchainConfig = {
 };
 
 // Quick access constants
-export const CONTRACT_ADDRESS = '0x15d6eefe60f9490DB1c767478b1254881d49C727';
+export const CONTRACT_ADDRESS = '0xaeB568Af9D1c8B7990c307BA0C2eB64be3FeA2a8';
 export const CONTRACT_ABI = [
   {
     "inputs": [],
