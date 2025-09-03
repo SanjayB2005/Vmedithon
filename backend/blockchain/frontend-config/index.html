@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vmedithon - Blockchain Medical Records</title>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 10px 0; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .success { color: green; } .error { color: red; } .info { color: blue; }
+        input { padding: 10px; margin: 5px; width: 300px; border: 1px solid #ccc; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🏥 Vmedithon - Blockchain Medical Records</h1>
+    
+    <div class="container">
+        <h3>Network Information</h3>
+        <p id="networkInfo">Network: Loading...</p>
+        <p id="contractInfo">Contract: Loading...</p>
+        <p id="blockExplorer"></p>
+    </div>
+
+    <div class="container">
+        <h3>Wallet Connection</h3>
+        <button id="connectBtn" onclick="connectWallet()">Connect MetaMask</button>
+        <p id="accountInfo"></p>
+        <p id="userType"></p>
+    </div>
+
+    <div class="container" id="registrationSection" style="display:none;">
+        <h3>Registration</h3>
+        <button onclick="registerAsPatient()">Register as Patient</button>
+        <button onclick="registerAsDoctor()">Register as Doctor</button>
+    </div>
+
+    <div class="container" id="doctorSection" style="display:none;">
+        <h3>Doctor Actions</h3>
+        <input type="text" id="patientAddress" placeholder="Patient Address">
+        <button onclick="requestPatientAccess()">Request Patient Access</button>
+    </div>
+
+    <div class="container" id="patientSection" style="display:none;">
+        <h3>Patient Actions</h3>
+        <button onclick="viewMyRecords()">View My Records</button>
+        <button onclick="viewAccessRequests()">View Access Requests</button>
+    </div>
+
+    <div class="container">
+        <h3>Status</h3>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        // Configuration - Replace these with your deployed values
+        const CONFIG = {
+            CONTRACT_ADDRESS: 'YOUR_CONTRACT_ADDRESS_HERE', // Will be filled by deployment script
+            RPC_URL: 'YOUR_RPC_URL_HERE',
+            CHAIN_ID: 'YOUR_CHAIN_ID_HERE',
+            NETWORK_NAME: 'YOUR_NETWORK_NAME_HERE',
+            BLOCK_EXPLORER: 'YOUR_BLOCK_EXPLORER_HERE'
+        };
+
+        // Contract ABI - Will be filled by deployment script
+        const CONTRACT_ABI = []; // This will be populated with your contract ABI
+
+        let web3;
+        let contract;
+        let currentAccount;
+
+        // Initialize the app
+        window.addEventListener('load', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                updateStatus('MetaMask detected!', 'success');
+                initializeWeb3();
+            } else {
+                updateStatus('Please install MetaMask!', 'error');
+            }
+        });
+
+        function initializeWeb3() {
+            web3 = new Web3(window.ethereum);
+            contract = new web3.eth.Contract(CONTRACT_ABI, CONFIG.CONTRACT_ADDRESS);
+            
+            // Update UI
+            document.getElementById('networkInfo').textContent = `Network: ${CONFIG.NETWORK_NAME}`;
+            document.getElementById('contractInfo').textContent = `Contract: ${CONFIG.CONTRACT_ADDRESS}`;
+            
+            if (CONFIG.BLOCK_EXPLORER) {
+                document.getElementById('blockExplorer').innerHTML = 
+                    `<a href="${CONFIG.BLOCK_EXPLORER}/address/${CONFIG.CONTRACT_ADDRESS}" target="_blank">View on Block Explorer</a>`;
+            }
+            
+            updateStatus('Web3 initialized successfully!', 'success');
+        }
+
+        async function connectWallet() {
+            try {
+                const accounts = await window.ethereum.request({
+                    method: 'eth_requestAccounts'
+                });
+
+                if (accounts.length > 0) {
+                    currentAccount = accounts[0];
+                    document.getElementById('accountInfo').textContent = `Connected: ${currentAccount}`;
+                    document.getElementById('connectBtn').textContent = 'Connected ✅';
+                    
+                    await checkNetwork();
+                    await checkUserType();
+                    updateStatus('Wallet connected successfully!', 'success');
+                }
+            } catch (error) {
+                updateStatus(`Error connecting wallet: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkNetwork() {
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            
+            if (chainId !== CONFIG.CHAIN_ID) {
+                updateStatus(`Wrong network. Please switch to ${CONFIG.NETWORK_NAME}`, 'error');
+                
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: CONFIG.CHAIN_ID }],
+                    });
+                } catch (switchError) {
+                    updateStatus('Please switch network manually in MetaMask', 'error');
+                }
+            }
+        }
+
+        async function checkUserType() {
+            let isPatient = false;
+            let isDoctor = false;
+
+            try {
+                await contract.methods.getPatientInfo(currentAccount).call({ from: currentAccount });
+                isPatient = true;
+            } catch (error) {}
+
+            try {
+                await contract.methods.getDoctorInfo(currentAccount).call();
+                isDoctor = true;
+            } catch (error) {}
+
+            if (isPatient || isDoctor) {
+                document.getElementById('registrationSection').style.display = 'none';
+                document.getElementById('userType').textContent = 
+                    `User Type: ${isPatient ? 'Patient' : ''} ${isDoctor ? 'Doctor' : ''}`;
+                
+                if (isDoctor) {
+                    document.getElementById('doctorSection').style.display = 'block';
+                }
+                if (isPatient) {
+                    document.getElementById('patientSection').style.display = 'block';
+                }
+            } else {
+                document.getElementById('registrationSection').style.display = 'block';
+                document.getElementById('userType').textContent = 'User Type: Not registered';
+            }
+        }
+
+        async function registerAsPatient() {
+            try {
+                updateStatus('Registering as patient...', 'info');
+                
+                await contract.methods.registerPatient(
+                    'John Doe',
+                    'john@example.com',
+                    Math.floor(Date.now() / 1000) - 86400
+                ).send({ from: currentAccount });
+
+                updateStatus('Registered as patient successfully!', 'success');
+                await checkUserType();
+            } catch (error) {
+                updateStatus(`Error registering as patient: ${error.message}`, 'error');
+            }
+        }
+
+        async function registerAsDoctor() {
+            try {
+                updateStatus('Registering as doctor...', 'info');
+                
+                await contract.methods.registerDoctor(
+                    'Dr. Smith',
+                    'MD12345',
+                    'General Medicine'
+                ).send({ from: currentAccount });
+
+                updateStatus('Registered as doctor successfully!', 'success');
+                await checkUserType();
+            } catch (error) {
+                updateStatus(`Error registering as doctor: ${error.message}`, 'error');
+            }
+        }
+
+        async function requestPatientAccess() {
+            const patientAddress = document.getElementById('patientAddress').value;
+            if (!patientAddress) {
+                updateStatus('Please enter patient address', 'error');
+                return;
+            }
+
+            try {
+                updateStatus('Sending access request...', 'info');
+                
+                await contract.methods.requestPatientAccess(
+                    patientAddress,
+                    'Medical examination and consultation'
+                ).send({ from: currentAccount });
+
+                updateStatus('Access request sent successfully!', 'success');
+            } catch (error) {
+                updateStatus(`Error requesting access: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewMyRecords() {
+            try {
+                const documents = await contract.methods.getPatientDocuments(currentAccount)
+                    .call({ from: currentAccount });
+                
+                updateStatus(`You have ${documents.length} medical documents`, 'info');
+            } catch (error) {
+                updateStatus(`Error fetching records: ${error.message}`, 'error');
+            }
+        }
+
+        async function viewAccessRequests() {
+            try {
+                const requests = await contract.methods.getPatientPendingRequests(currentAccount)
+                    .call({ from: currentAccount });
+                
+                updateStatus(`You have ${requests.length} pending access requests`, 'info');
+            } catch (error) {
+                updateStatus(`Error fetching requests: ${error.message}`, 'error');
+            }
+        }
+
+        function updateStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            
+            statusDiv.innerHTML = `<p class="${className}">[${timestamp}] ${message}</p>` + statusDiv.innerHTML;
+        }
+    </script>
+
+    <div class="container">
+        <h3>Instructions for Use</h3>
+        <ol>
+            <li>Connect your MetaMask wallet</li>
+            <li>Make sure you're on the correct network</li>
+            <li>Register as either a Patient or Doctor</li>
+            <li>Use the respective functions based on your role</li>
+        </ol>
+        
+        <p><strong>Note:</strong> This is the frontend interface for your deployed Vmedithon smart contract. 
+        The configuration values will be automatically filled when you deploy your contract.</p>
+    </div>
+</body>
+</html>

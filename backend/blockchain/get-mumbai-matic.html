@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Faucet Helper</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .faucet-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .address-box { background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745; margin: 10px 0; }
+        .step { background: white; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .btn { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #0056b3; }
+        code { background: #f8f9fa; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Get Free Mumbai MATIC for Deployment</h1>
+    
+    <div class="faucet-box">
+        <h2>Your Wallet Address</h2>
+        <div class="address-box">
+            <strong>0x309780978FEc7A070ff69DA35dD2d3C21D3b922b</strong>
+        </div>
+        <p>Copy this address to get free Mumbai MATIC tokens</p>
+    </div>
+    
+    <h3>Step-by-Step Guide:</h3>
+    
+    <div class="step">
+        <h4>🔥 Option 1: Polygon Official Faucet (Recommended)</h4>
+        <p>1. Go to: <a href="https://faucet.polygon.technology/" target="_blank">https://faucet.polygon.technology/</a></p>
+        <p>2. Select "Mumbai" network</p>
+        <p>3. Select "MATIC Token"</p>
+        <p>4. Paste your address: <code>0x309780978FEc7A070ff69DA35dD2d3C21D3b922b</code></p>
+        <p>5. Click "Submit" (you get 0.5 MATIC instantly!)</p>
+    </div>
+    
+    <div class="step">
+        <h4>⚡ Option 2: Alchemy Faucet</h4>
+        <p>1. Go to: <a href="https://mumbaifaucet.com/" target="_blank">https://mumbaifaucet.com/</a></p>
+        <p>2. Paste: <code>0x309780978FEc7A070ff69DA35dD2d3C21D3b922b</code></p>
+        <p>3. Complete captcha and submit</p>
+    </div>
+    
+    <div class="step">
+        <h4>🚀 Option 3: QuickNode Faucet</h4>
+        <p>1. Go to: <a href="https://faucet.quicknode.com/polygon/mumbai" target="_blank">https://faucet.quicknode.com/polygon/mumbai</a></p>
+        <p>2. Enter your address and get tokens</p>
+    </div>
+    
+    <h3>After Getting MATIC:</h3>
+    <div class="step">
+        <p>1. Wait 1-2 minutes for tokens to arrive</p>
+        <p>2. Run the smart deployment script:</p>
+        <code>node smart-deploy.js</code>
+        <p>3. Your blockchain will deploy for almost FREE! 🎉</p>
+    </div>
+    
+    <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 15px; margin-top: 20px;">
+        <h4>💡 Why Mumbai is Best:</h4>
+        <ul>
+            <li>✅ Almost FREE gas costs (0.001 MATIC ≈ $0.0001)</li>
+            <li>✅ Fast deployment (30 seconds)</li>
+            <li>✅ Same as Ethereum mainnet but cheaper</li>
+            <li>✅ Your 0.05 ETH stays safe for mainnet later!</li>
+        </ul>
+    </div>
+    
+    <script>
+        // Auto-copy address on click
+        document.querySelector('.address-box').addEventListener('click', function() {
+            navigator.clipboard.writeText('0x309780978FEc7A070ff69DA35dD2d3C21D3b922b');
+            this.style.background = '#28a745';
+            this.style.color = 'white';
+            setTimeout(() => {
+                this.style.background = '#f8f9fa';
+                this.style.color = 'black';
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
